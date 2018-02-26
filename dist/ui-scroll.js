@@ -1,7 +1,7 @@
 /*!
  * angular-ui-scroll
  * https://github.com/angular-ui/ui-scroll
- * Version: 1.7.0 -- 2017-12-05T17:50:06.228Z
+ * Version: 1.7.0 -- 2018-02-26T13:23:36.270Z
  * License: MIT
  */
 /******/ (function(modules) { // webpackBootstrap
@@ -154,6 +154,7 @@ angular.module('ui.scroll', []).constant('JQLiteExtras', _jqLiteExtras2.default)
     var viewportController = controllers[0];
     var bufferSize = Math.max(BUFFER_MIN, parseNumericAttr($attr.bufferSize, BUFFER_DEFAULT));
     var padding = Math.max(PADDING_MIN, parseNumericAttr($attr.padding, PADDING_DEFAULT));
+    var clippingEnabled = $attr.disableClipping !== true;
     var startIndex = parseNumericAttr($attr.startIndex, 1);
     var ridActual = 0; // current data revision id
     var pending = [];
@@ -537,7 +538,9 @@ angular.module('ui.scroll', []).constant('JQLiteExtras', _jqLiteExtras2.default)
             }
 
             if (result.length > 0) {
-              viewport.clipTop();
+              if (clippingEnabled) {
+                viewport.clipTop();
+              }
               buffer.append(result);
             }
 
@@ -560,7 +563,7 @@ angular.module('ui.scroll', []).constant('JQLiteExtras', _jqLiteExtras2.default)
             }
 
             if (result.length > 0) {
-              if (buffer.length) {
+              if (buffer.length && clippingEnabled) {
                 viewport.clipBottom();
               }
               buffer.prepend(result);

@@ -77,6 +77,7 @@ angular.module('ui.scroll', [])
         const viewportController = controllers[0];
         const bufferSize = Math.max(BUFFER_MIN, parseNumericAttr($attr.bufferSize, BUFFER_DEFAULT));
         const padding = Math.max(PADDING_MIN, parseNumericAttr($attr.padding, PADDING_DEFAULT));
+        const clippingEnabled = $attr.disableClipping !== true;
         let startIndex = parseNumericAttr($attr.startIndex, 1);
         let ridActual = 0; // current data revision id
         let pending = [];
@@ -440,7 +441,9 @@ angular.module('ui.scroll', [])
                 }
 
                 if (result.length > 0) {
-                  viewport.clipTop();
+                  if (clippingEnabled) {
+                    viewport.clipTop();
+                  }
                   buffer.append(result);
                 }
 
@@ -462,7 +465,7 @@ angular.module('ui.scroll', [])
                 }
 
                 if (result.length > 0) {
-                  if (buffer.length) {
+                  if (buffer.length && clippingEnabled) {
                     viewport.clipBottom();
                   }
                   buffer.prepend(result);
